@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLinq", "SQLinq\SQLinq.csproj", "{95AF6DBE-D796-469B-97D1-0C23D664D384}"
 EndProject
@@ -61,6 +61,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{9CF963
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLinq.Standard.Test", "SQLinq.Standard.Test\SQLinq.Standard.Test.csproj", "{9655E849-0158-4A3C-AE06-1BA6C08DE35E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLinq.Standard", "SQLinq.Standard\SQLinq.Standard.csproj", "{96864A05-A473-4BE2-9CFD-62B13A479738}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +87,14 @@ Global
 		{3F9DE692-FBE8-4D31-A41F-FE2FEB175A53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F9DE692-FBE8-4D31-A41F-FE2FEB175A53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F9DE692-FBE8-4D31-A41F-FE2FEB175A53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9655E849-0158-4A3C-AE06-1BA6C08DE35E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9655E849-0158-4A3C-AE06-1BA6C08DE35E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9655E849-0158-4A3C-AE06-1BA6C08DE35E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9655E849-0158-4A3C-AE06-1BA6C08DE35E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96864A05-A473-4BE2-9CFD-62B13A479738}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96864A05-A473-4BE2-9CFD-62B13A479738}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96864A05-A473-4BE2-9CFD-62B13A479738}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96864A05-A473-4BE2-9CFD-62B13A479738}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -97,6 +109,9 @@ Global
 		{E85F59BD-719A-4454-A728-A12816A61B7B} = {715B669D-0F60-4C52-8CAB-1050BD208360}
 		{53366D81-F50A-4A65-9C4E-724E75B0DE73} = {A18F3145-788E-46B8-8938-D02B89966652}
 		{AFD80FD5-AE34-4667-9B82-D64BB3F0AA0E} = {C6611665-1E45-427E-B333-F5866DC4DB55}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C230F57B-1BC2-4770-B372-C1BBD2F78E8E}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = SQLinq.vsmdi

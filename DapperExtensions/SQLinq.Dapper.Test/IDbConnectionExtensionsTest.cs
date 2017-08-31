@@ -13,6 +13,7 @@ using System.Data.SqlClient;
 namespace SQLinq.Dapper.Test
 {
     [TestClass]
+    [Ignore]
     public class IDbConnectionExtensionsTest
     {
         private IDbConnection GetDBConnection()
