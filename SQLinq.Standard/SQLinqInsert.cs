@@ -45,7 +45,7 @@ namespace SQLinq
 
             foreach (var p in type.GetProperties())
             {
-                var ignoreField = true;
+                var ignoreField = false;
                 var fieldName = p.Name;
                 var attr = p.GetCustomAttributes(typeof(SQLinqColumnAttribute), true).FirstOrDefault() as SQLinqColumnAttribute;
                 if (attr != null)

@@ -242,6 +242,20 @@ namespace SQLinqTest
             Assert.AreEqual("Chris", actual.Parameters["@sqlinq_2"]);
         }
 
+        [TestMethod]
+        public void TestToSQL_Insert_Success()
+        {
+            var data = new ToSQL_007_Class
+            {
+                ID = 33,
+                Name = "Chris",
+                DotNotInsert = "Some Value"
+            };
+            var target = data.ToSQLinqInsert();
+            var actual = (SQLinqInsertResult)target.ToSQL();
+            var query = actual.ToQuery();
+        }
+
         [SQLinqTable("MyTable")]
         private class ToSQL_007_Class
         {
