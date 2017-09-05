@@ -45,19 +45,19 @@ namespace SQLinq
 
             foreach (var p in type.GetProperties())
             {
-                var includeInInsert = true;
+                var ignoreField = true;
                 var fieldName = p.Name;
                 var attr = p.GetCustomAttributes(typeof(SQLinqColumnAttribute), true).FirstOrDefault() as SQLinqColumnAttribute;
                 if (attr != null)
                 {
-                    includeInInsert = attr.Insert;
+                    ignoreField = attr.Ignore;
                     if (!string.IsNullOrEmpty(attr.Column))
                     {
                         fieldName = attr.Column;
                     }
                 }
 
-                if (includeInInsert)
+                if (!ignoreField)
                 {
                     var parameterName = this.Dialect.ParameterPrefix + parameterNamePrefix + _parameterNumber.ToString();
 

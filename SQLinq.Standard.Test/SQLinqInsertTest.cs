@@ -248,7 +248,7 @@ namespace SQLinqTest
             public int ID { get; set; }
             public string Name { get; set; }
 
-            [SQLinqColumn(insert: false)]
+            [SQLinqColumn(Ignore = true)]
             public string DotNotInsert { get; set; }
         }
     }

@@ -270,7 +270,7 @@ namespace SQLinqTest
             public int ID { get; set; }
             public string Name { get; set; }
 
-            [SQLinqColumn(update: false)]
+            [SQLinqColumn()]
             public string DoNotUpdate { get; set; }
         }
     }

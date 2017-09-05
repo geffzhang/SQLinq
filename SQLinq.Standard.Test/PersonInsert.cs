@@ -9,7 +9,7 @@ namespace SQLinqTest
 {
     public class PersonInsert
     {
-        [SQLinqColumn(insert: false, update: false)]
+        [SQLinqColumn(Ignore = false)]
         public Guid ID { get; set; }
 
         public string FirstName { get; set; }

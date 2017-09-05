@@ -16,11 +16,9 @@ namespace SQLinq
         /// SQLinqColumnAttribute constructor
         /// </summary>
         /// <param name="columnName">The database column name to use for this property with SQLinq queries.</param>
-        public SQLinqColumnAttribute(string columnName = null, bool insert = true, bool update = true)
+        public SQLinqColumnAttribute(string columnName = null)
         {
             this.Column = columnName;
-            this.Insert = insert;
-            this.Update = update;
         }
 
         /// <summary>
@@ -33,14 +31,14 @@ namespace SQLinq
         /// </summary>
         public string Column { get; private set; }
 
-        /// <summary>
-        /// Determines whether the column is used for inserting; via ISQLinqInsert.
-        /// </summary>
-        public bool Insert { get; set; }
+        ///// <summary>
+        ///// Determines whether the column is used for inserting; via ISQLinqInsert.
+        ///// </summary>
+        //public bool Insert { get; set; }
 
-        /// <summary>
-        /// Determines whether the column is used for updating; via ISQLinqUpdate.
-        /// </summary>
-        public bool Update { get; set; }
+        ///// <summary>
+        ///// Determines whether the column is used for updating; via ISQLinqUpdate.
+        ///// </summary>
+        //public bool Update { get; set; }
     }
 }
