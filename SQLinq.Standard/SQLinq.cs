@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace SQLinq
 {
@@ -511,12 +512,18 @@ namespace SQLinq
             }
             if (selectResult.Select.Count == 0)
             {
-                var props = typeof(T).GetProperties();
+                var props = typeof(T).GetTypeInfo().GetProperties();
                 var usesSQLinqColumn = props.Where(d => d.GetCustomAttributes(typeof(SQLinqColumnAttribute), false).Length > 0).Count() > 0;
                 if (usesSQLinqColumn)
                 {
                     foreach (var p in props)
                     {
+                        var attr = p.GetCustomAttribute<SQLinqColumnAttribute>();
+                        if (attr!= null&&attr.Ignore)
+                        {
+                            continue;
+                        }
+
                         var selectName = SqlExpressionCompiler.GetMemberColumnName(p, this.Dialect);
                         var asName = this.Dialect.ParseColumnName(p.Name);
                         if (selectName == asName)

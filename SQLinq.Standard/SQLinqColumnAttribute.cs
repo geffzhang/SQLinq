@@ -24,6 +24,11 @@ namespace SQLinq
         }
 
         /// <summary>
+        /// ignor field
+        /// </summary>
+        public bool Ignore { get; set; }
+
+        /// <summary>
         /// The database column name to use for this property with SQLinq queries.
         /// </summary>
         public string Column { get; private set; }
