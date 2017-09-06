@@ -205,19 +205,21 @@ namespace SQLinq.Compiler
                 var ie = (MemberInitExpression)e;
                 var reuslt = Expression.Lambda(ie).Compile();
                 var rr = reuslt.DynamicInvoke();
-                var propertities = rr.GetType().GetTypeInfo().GetProperties();
-                foreach (var p in propertities)
+                 var type = rr.GetType().GetTypeInfo();
+                foreach (MemberAssignment b in ie.Bindings)
                 {
-                    var attr = p.GetCustomAttribute<SQLinqColumnAttribute>();
+                    var ce = (ConstantExpression)b.Expression;
+                    var attr = b.Member.GetCustomAttribute<SQLinqColumnAttribute>();
                     if (attr != null && attr.Ignore)
                     {
                         return;
                     }
-                    var name = attr?.Column??p.Name;
-                    var value = p.GetValue(rr);
+                    var name = attr?.Column ?? b.Member.Name;
+                    //var value = b.Member.GetValue(rr);
+                    
                     var paramaterName = getParameterName();
                     updater.Add($"{name} = {paramaterName}");
-                    parameters.Add(paramaterName,value);
+                    parameters.Add(paramaterName, ce.Value);
                 }
             }
         }

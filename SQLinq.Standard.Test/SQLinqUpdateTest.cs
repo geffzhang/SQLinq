@@ -273,18 +273,17 @@ namespace SQLinqTest
             sqlinq.UpdateSet(()=>new ToSQL_009_Class()
             {
                 ID = 1,
-                Name = "test"
+                //Name = "test"
             });
             sqlinq.Where(x => x.ID == 1024);
             var sql = sqlinq.ToSQL();
             var query = sql.ToQuery();
 
-            var sqlResult = "UPDATE `MyTable` SET ID = @sqlinq_2,Name = @sqlinq_3\r\n WHERE `ID` = @sqlinq_1";
+            var sqlResult = "UPDATE `MyTable` SET ID = @sqlinq_2\r\n WHERE `ID` = @sqlinq_1";
             Assert.AreEqual(sqlResult,query);
-            Assert.AreEqual(sql.Parameters.Count,3);
+            Assert.AreEqual(sql.Parameters.Count,2);
             Assert.AreEqual(sql.Parameters["@sqlinq_2"],1);
             Assert.AreEqual(sql.Parameters["@sqlinq_1"], 1024);
-            Assert.AreEqual(sql.Parameters["@sqlinq_3"], "test");
         }
 
         [SQLinqTable("MyTable")]
