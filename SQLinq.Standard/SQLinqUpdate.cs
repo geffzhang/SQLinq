@@ -7,22 +7,39 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
+using SQLinq.Standard.Compiler;
 
 namespace SQLinq
 {
     public class SQLinqUpdate<T> : ISQLinqUpdate
     {
+        public SQLinqUpdate(ISqlDialect dialect)
+        {
+            this.Dialect = dialect;
+            this.Expressions = new List<Expression>();
+        }
+
         public SQLinqUpdate(T data)
             : this(data, DialectProvider.Create())
         { }
 
         public SQLinqUpdate(T data, ISqlDialect dialect)
         {
-            this.Data = data;
+            //this.Data = data;
 
             this.Expressions = new List<Expression>();
 
             this.Dialect = dialect;
+        }
+
+        private Expression<Func<T>> _updateExpression;
+
+        private SqlExpressionCompiler compiler;
+
+        public void UpdateSet(Expression<Func<T>> setExpression)
+        {
+            this._updateExpression = setExpression;
         }
 
         public SQLinqUpdate(T data, string tableNameOverride, ISqlDialect dialect)
@@ -33,7 +50,7 @@ namespace SQLinq
 
         public ISqlDialect Dialect { get; private set; }
 
-        public T Data { get; set; }
+        //public T Data { get; set; }
         public string TableNameOverride { get; set; }
 
         public List<Expression> Expressions { get; private set; }
@@ -65,7 +82,7 @@ namespace SQLinq
             int _parameterNumber = existingParameterCount;
             _parameterNumber++;
 
-            var type = this.Data.GetType();
+            var type = typeof(T).GetTypeInfo();
             var parameters = new Dictionary<string, object>();
             var fields = new Dictionary<string, string>();
 
@@ -91,22 +108,27 @@ namespace SQLinq
                     var parameterName = this.Dialect.ParameterPrefix + parameterNamePrefix + _parameterNumber.ToString();
 
                     fields.Add(fieldName, parameterName);
-                    parameters.Add(parameterName, p.GetValue(this.Data, null));
+                    //parameters.Add(parameterName, p.GetValue(this.Data, null));
 
                     _parameterNumber++;
                 }
             }
             _parameterNumber = existingParameterCount + parameters.Count;
-
+            this.compiler = new SqlExpressionCompiler(this.Dialect, _parameterNumber, parameterNamePrefix);
             // ****************************************************
             // **** WHERE *****************************************
-            var whereResult = this.ToSQL_Where(_parameterNumber, parameterNamePrefix, parameters);
+            SqlExpressionCompilerResult whereResult = this.ToSQL_Where(_parameterNumber, parameterNamePrefix, parameters);
 
+
+            // ******************************
+            // **** SET *********************
+            var set = this.ToSQL_UpdateSet(0, parameterNamePrefix, parameters);
 
             return new SQLinqUpdateResult(this.Dialect)
             {
                 Table = tableName,
-                Where = whereResult == null ? null : whereResult.SQL,
+                Where = whereResult?.SQL,
+                Update = set?.SQL,
                 Fields = fields,
                 Parameters = parameters
             };
@@ -117,13 +139,23 @@ namespace SQLinq
             SqlExpressionCompilerResult whereResult = null;
             if (this.Expressions.Count > 0)
             {
-                whereResult = SqlExpressionCompiler.Compile(this.Dialect, parameterNumber, parameterNamePrefix, this.Expressions);
+                whereResult = this.compiler.Compile(this.Expressions);
                 foreach (var item in whereResult.Parameters)
                 {
                     parameters.Add(item.Key, item.Value);
                 }
             }
             return whereResult;
+        }
+
+        private SqlExpressionCompilerUpdaterResult ToSQL_UpdateSet(int parameterNumber, string parameterNamePrefix, IDictionary<string, object> parameters)
+        {
+            if (this._updateExpression != null)
+            {
+                SqlExpressionCompilerUpdaterResult result = compiler.CompilerUpdater(this._updateExpression,parameters);
+                return result;
+            }
+            return null;
         }
 
         private string GetTableName()
@@ -136,7 +168,7 @@ namespace SQLinq
             else
             {
                 // Get Table / View Name
-                var type = this.Data.GetType();
+                var type = typeof(T);
                 tableName = type.Name;
                 var tableAttribute = type.GetCustomAttributes(typeof(SQLinqTableAttribute), false).FirstOrDefault() as SQLinqTableAttribute;
                 if (tableAttribute != null)

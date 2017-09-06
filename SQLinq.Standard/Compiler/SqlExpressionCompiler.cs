@@ -8,6 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using SQLinq.Standard.Compiler;
 
 namespace SQLinq.Compiler
 {
@@ -100,6 +101,19 @@ namespace SQLinq.Compiler
             return result;
         }
 
+        public SqlExpressionCompilerUpdaterResult CompilerUpdater(Expression expression, IDictionary<string, object> parameters)
+        {
+            var result = new SqlExpressionCompilerUpdaterResult();
+            ProcessUpdater(this.Dialect, ((LambdaExpression)expression).Body, ((LambdaExpression)expression).Body, result.Updater, result.Parameters, this.GetParameterName);
+            result.SQL = string.Join(",", result.Updater);
+
+            foreach (var p in result.Parameters)
+            {
+                parameters.Add(p.Key,p.Value);
+            }
+            return result;
+        }
+
         #endregion
 
         #region Private Methods
@@ -172,6 +186,39 @@ namespace SQLinq.Compiler
             {
                 var s = ProcessCallExpression(dialect, rootExpression, (MethodCallExpression)e, parameters, getParameterName);
                 select.Add(s);
+            }
+        }
+
+        static void ProcessUpdater(ISqlDialect dialect, Expression rootExpression, Expression e, IList<string> updater, IDictionary<string, object> parameters, Func<string> getParameterName)
+        {
+            if (e == null)
+            {
+                return;
+            }
+            
+            if (e.NodeType == ExpressionType.Lambda)
+            {
+                ProcessSelector(dialect, rootExpression, ((LambdaExpression)e).Body, updater, parameters, getParameterName);
+            }
+            else if (e.NodeType == ExpressionType.MemberInit)
+            {
+                var ie = (MemberInitExpression)e;
+                var reuslt = Expression.Lambda(ie).Compile();
+                var rr = reuslt.DynamicInvoke();
+                var propertities = rr.GetType().GetTypeInfo().GetProperties();
+                foreach (var p in propertities)
+                {
+                    var attr = p.GetCustomAttribute<SQLinqColumnAttribute>();
+                    if (attr != null && attr.Ignore)
+                    {
+                        return;
+                    }
+                    var name = attr?.Column??p.Name;
+                    var value = p.GetValue(rr);
+                    var paramaterName = getParameterName();
+                    updater.Add($"{name} = {paramaterName}");
+                    parameters.Add(paramaterName,value);
+                }
             }
         }
 
@@ -348,21 +395,31 @@ namespace SQLinq.Compiler
 
         static string ProcessBinaryExpression(ISqlDialect dialect, string sqlOperator, Expression rootExpression, BinaryExpression e, IDictionary<string, object> parameters, Func<string> getParameterName)
         {
-            var left = ProcessSingleSideExpression(dialect, rootExpression, e.Left, parameters, getParameterName);
-            var right = ProcessSingleSideExpression(dialect, rootExpression, e.Right, parameters, getParameterName);
+            string left = ProcessSingleSideExpression(dialect, rootExpression, e.Left, parameters, getParameterName);
+            string right = ProcessSingleSideExpression(dialect, rootExpression, e.Right, parameters, getParameterName);
             
-            var op = sqlOperator;
-            if (right == _NULL)
+            string op = sqlOperator;
+            if (op != "SET")
             {
-                if (sqlOperator == "=")
+                if (right == _NULL)
                 {
-                    op = "IS";
-                }
-                else if (sqlOperator == "<>")
-                {
-                    op = "IS NOT";
+                    if (sqlOperator == "=")
+                    {
+                        op = "IS";
+                    }
+                    else if (sqlOperator == "<>")
+                    {
+                        op = "IS NOT";
+                    }
                 }
             }
+            else
+            {
+                string parameterName = GetExpressionValue(dialect, rootExpression, e.Right, parameters, getParameterName);
+                parameters.Add(parameterName,right);
+                return $"{op} {left}={parameterName}";
+            }
+            
 
             return string.Format("{1} {0} {2}", op, left, right);
         }

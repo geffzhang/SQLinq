@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <DocumentationFile>bin\Debug\netstandard2.0\SQLinq.Standard.xml</DocumentationFile>
   </PropertyGroup>
 

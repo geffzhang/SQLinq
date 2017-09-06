@@ -25,6 +25,8 @@ namespace SQLinq
 
         public string Where { get; set; }
 
+        public string Update { get; set; }
+
         public string ToQuery()
         {
             if (string.IsNullOrWhiteSpace((this.Table ?? string.Empty).Trim()))
@@ -43,21 +45,29 @@ namespace SQLinq
             var fieldParameterList = new StringBuilder();
 
             var isFirst = true;
-            foreach (var f in this.Fields)
+
+            if (this.Update == null)
             {
-                if (!isFirst)
+                foreach (var f in this.Fields)
                 {
-                    fieldParameterList.Append(", ");
-                }
-                else
-                {
-                    isFirst = false;
-                }
+                    if (!isFirst)
+                    {
+                        fieldParameterList.Append(", ");
+                    }
+                    else
+                    {
+                        isFirst = false;
+                    }
 
-                fieldParameterList.Append(this.Dialect.ParseColumnName(f.Key));
+                    fieldParameterList.Append(this.Dialect.ParseColumnName(f.Key));
 
-                fieldParameterList.Append(" = ");
-                fieldParameterList.Append(f.Value);
+                    fieldParameterList.Append(" = ");
+                    fieldParameterList.Append(f.Value);
+                }
+            }
+            else
+            {
+                fieldParameterList.AppendLine(this.Update);
             }
 
             if (string.IsNullOrWhiteSpace(this.Where))
