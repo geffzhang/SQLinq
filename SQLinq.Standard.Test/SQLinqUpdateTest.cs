@@ -286,6 +286,29 @@ namespace SQLinqTest
             Assert.AreEqual(sql.Parameters["@sqlinq_1"], 1024);
         }
 
+        [TestMethod]
+        public void UpdateSetExpression_field_test()
+        {
+            var sqlinq = new SQLinqUpdate<ToSQL_009_Class>(new MySqlDialect());
+
+            var ttt = new {id = 555};
+
+            sqlinq.UpdateSet(() => new ToSQL_009_Class()
+            {
+                ID = ttt.id,
+                //Name = "test"
+            });
+            sqlinq.Where(x => x.ID == 1024);
+            var sql = sqlinq.ToSQL();
+            var query = sql.ToQuery();
+
+            var sqlResult = "UPDATE `MyTable` SET ID = @sqlinq_2\r\n WHERE `ID` = @sqlinq_1";
+            Assert.AreEqual(sqlResult, query);
+            Assert.AreEqual(sql.Parameters.Count, 2);
+            Assert.AreEqual(sql.Parameters["@sqlinq_2"], 555);
+            Assert.AreEqual(sql.Parameters["@sqlinq_1"], 1024);
+        }
+
         [SQLinqTable("MyTable")]
         private class ToSQL_009_Class
         {

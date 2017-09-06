@@ -203,12 +203,25 @@ namespace SQLinq.Compiler
             else if (e.NodeType == ExpressionType.MemberInit)
             {
                 var ie = (MemberInitExpression)e;
-                var reuslt = Expression.Lambda(ie).Compile();
-                var rr = reuslt.DynamicInvoke();
-                 var type = rr.GetType().GetTypeInfo();
+                
                 foreach (MemberAssignment b in ie.Bindings)
                 {
-                    var ce = (ConstantExpression)b.Expression;
+                    object value;
+                    if (b.Expression.NodeType == ExpressionType.Constant)
+                    {
+                        var ce = (ConstantExpression)b.Expression;
+                        value = ce.Value;
+                    }
+                    else if (b.Expression.NodeType == ExpressionType.MemberAccess)
+                    {
+                        var fun = Expression.Lambda(b.Expression);
+                        value = fun.Compile().DynamicInvoke();
+                    }
+                    else
+                    {
+                        throw new NotSupportedException("unsupport");
+                    }
+                    
                     var attr = b.Member.GetCustomAttribute<SQLinqColumnAttribute>();
                     if (attr != null && attr.Ignore)
                     {
@@ -219,7 +232,7 @@ namespace SQLinq.Compiler
                     
                     var paramaterName = getParameterName();
                     updater.Add($"{name} = {paramaterName}");
-                    parameters.Add(paramaterName, ce.Value);
+                    parameters.Add(paramaterName,value);
                 }
             }
         }
