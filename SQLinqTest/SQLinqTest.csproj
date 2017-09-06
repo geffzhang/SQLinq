@@ -83,12 +83,6 @@
     <Compile Include="SubQueryPerson.cs" />
     <Compile Include="SubQueryPerson2.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SQLinq\SQLinq.csproj">
-      <Project>{95af6dbe-d796-469b-97d1-0c23d664d384}</Project>
-      <Name>SQLinq</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

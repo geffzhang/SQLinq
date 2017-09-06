@@ -5,6 +5,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SQLinq;
 using System;
+using System.Linq;
+using SQLinq.Dialect;
 
 namespace SQLinqTest
 {
@@ -264,13 +266,34 @@ namespace SQLinqTest
             Assert.AreEqual("Chris", actual.Parameters["@sqlinq_2"]);
         }
 
+        [TestMethod]
+        public void UpdateSetExpression_test()
+        {
+            var sqlinq = new SQLinqUpdate<ToSQL_009_Class>(new MySqlDialect());
+            sqlinq.UpdateSet(()=>new ToSQL_009_Class()
+            {
+                ID = 1,
+                Name = "test"
+            });
+            sqlinq.Where(x => x.ID == 1024);
+            var sql = sqlinq.ToSQL();
+            var query = sql.ToQuery();
+
+            var sqlResult = "UPDATE `MyTable` SET ID = @sqlinq_2,Name = @sqlinq_3\r\n WHERE `ID` = @sqlinq_1";
+            Assert.AreEqual(sqlResult,query);
+            Assert.AreEqual(sql.Parameters.Count,3);
+            Assert.AreEqual(sql.Parameters["@sqlinq_2"],1);
+            Assert.AreEqual(sql.Parameters["@sqlinq_1"], 1024);
+            Assert.AreEqual(sql.Parameters["@sqlinq_3"], "test");
+        }
+
         [SQLinqTable("MyTable")]
         private class ToSQL_009_Class
         {
             public int ID { get; set; }
             public string Name { get; set; }
 
-            [SQLinqColumn()]
+            [SQLinqColumn(Ignore = true)]
             public string DoNotUpdate { get; set; }
         }
     }
