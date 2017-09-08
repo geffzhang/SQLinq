@@ -42,6 +42,8 @@ namespace SQLinqTest
             Assert.AreEqual("[Column With Spaces] AS [ColumnWithSpaces]", result.Select[6]);
         }
 
+
+
         [TestMethod]
         public void SQLinqTest_Mysql_001()
         {

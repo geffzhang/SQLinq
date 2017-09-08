@@ -365,15 +365,18 @@ namespace SQLinq.Compiler
                 switch (method.Name.ToLower())
                 {
                     case "startswith":
-                        parameters[parameterName] = parameters[parameterName].ToString() + "%";
+                        parameters.TryGetValue(parameterName, out object value);
+                        parameters[parameterName] = value + "%";
                         return string.Format("{0} LIKE {1}", memberName, parameterName);
 
                     case "endswith":
-                        parameters[parameterName] = "%" + parameters[parameterName].ToString();
+                        parameters.TryGetValue(parameterName, out value);
+                        parameters[parameterName] = "%" + value;
                         return string.Format("{0} LIKE {1}", memberName, parameterName);
 
                     case "contains":
-                        parameters[parameterName] = "%" + parameters[parameterName].ToString() + "%";
+                        parameters.TryGetValue(parameterName, out value);
+                        parameters[parameterName] = "%" + value + "%";
                         return string.Format("{0} LIKE {1}", memberName, parameterName);
 
                     case "toupper":
@@ -745,11 +748,7 @@ namespace SQLinq.Compiler
                 }
 
 
-                if (val == null)
-                {
-                    return _NULL;
-                }
-                else if ((val as string) == _Space)
+                if ((val as string) == _Space)
                 {
                     return "' '";
                 }
@@ -764,11 +763,7 @@ namespace SQLinq.Compiler
             {
                 var val = GetMemberAccessValue(rootExpression, e);
 
-                if (val == null)
-                {
-                    return _NULL;
-                }
-                else if ((val as string) == _Space)
+                if ((val as string) == _Space)
                 {
                     return "' '";
                 }
