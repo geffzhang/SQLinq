@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using SQLinq.Standard.Results;
 
 namespace SQLinq
 {
@@ -487,6 +488,16 @@ namespace SQLinq
                 OrderBy = orderbyResult.Select.ToArray(),
                 Parameters = parameters
             };
+        }
+
+        public ISQLinqResult ToDeleteSQL(string parameterNamePrefix = SqlExpressionCompiler.DefaultParameterNamePrefix)
+        {
+            var tableName = this.GetTableName();
+            var parameters = new Dictionary<string, object>();
+            // WHERE
+            var whereResult = this.ToSQL_Where(0, parameterNamePrefix, parameters);
+            
+            return new SQLinqDeleteResult<T>(whereResult.SQL,parameters, tableName);
         }
 
         private SqlExpressionCompilerResult ToSQL_Where(int parameterNumber, string parameterNamePrefix, IDictionary<string, object> parameters)
