@@ -362,33 +362,33 @@ namespace SQLinq.Compiler
                     }
                 }
 
-                switch (method.Name.ToLower())
+                switch (method.Name.ToUpperInvariant())
                 {
-                    case "startswith":
+                    case "STARTSWITH":
                         parameters.TryGetValue(parameterName, out object value);
                         parameters[parameterName] = value + "%";
                         return string.Format("{0} LIKE {1}", memberName, parameterName);
 
-                    case "endswith":
+                    case "ENDSWITH":
                         parameters.TryGetValue(parameterName, out value);
                         parameters[parameterName] = "%" + value;
                         return string.Format("{0} LIKE {1}", memberName, parameterName);
 
-                    case "contains":
+                    case "CONTAINS":
                         parameters.TryGetValue(parameterName, out value);
                         parameters[parameterName] = "%" + value + "%";
                         return string.Format("{0} LIKE {1}", memberName, parameterName);
 
-                    case "toupper":
+                    case "TOUPPER":
                         return string.Format("UCASE({0})", memberName);
 
-                    case "tolower":
+                    case "TOLOWER":
                         return string.Format("LCASE({0})", memberName);
 
-                    case "replace":
+                    case "REPLACE":
                         return string.Format("REPLACE({0}, {1}, {2})", memberName, parameterName, secondParameterName);
 
-                    case "substring":
+                    case "SUBSTRING":
                         if (secondParameterName != null)
                         {
                             return string.Format("SUBSTR({0}, {1}, {2})", memberName, parameterName, secondParameterName);
@@ -398,14 +398,29 @@ namespace SQLinq.Compiler
                             return string.Format("SUBSTR({0}, {1})", memberName, parameterName);
                         }
 
-                    case "indexof":
+                    case "INDEXOF":
                         return string.Format("CHARINDEX({0}, {1})", parameterName, memberName);
-                    case "trim":
+                    case "TRIM":
                         return string.Format("LTRIM(RTRIM({0}))", memberName);
 
                     default:
                         throw new Exception("Unsupported Method Name (" + method.Name + ") on String object");
                 }
+            }
+            else if(method.DeclaringType == typeof(Enumerable))
+            {
+                string parameterName = GetExpressionValue(dialect, rootExpression, e.Arguments[0], parameters, getParameterName);
+                memberName = GetMemberColumnName(((MemberExpression)e.Arguments[1]).Member , dialect);
+
+
+                switch (method.Name.ToUpperInvariant())
+                {
+                    case "CONTAINS":
+                        return $"{memberName} IN {parameterName}";
+                    default:
+                        throw new Exception("Unsupported Method Declaring Type (" + method.DeclaringType.Name + ")");
+                }
+                
             }
             else
                 throw new Exception("Unsupported Method Declaring Type (" + method.DeclaringType.Name + ")");

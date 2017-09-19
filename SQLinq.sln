@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{441D0E72-6273-4819-970C-BF53F21EB931}"
 EndProject
@@ -15,6 +15,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLinq.Standard.Test", "SQLinq.Standard.Test\SQLinq.Standard.Test.csproj", "{9655E849-0158-4A3C-AE06-1BA6C08DE35E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLinq.Standard", "SQLinq.Standard\SQLinq.Standard.csproj", "{96864A05-A473-4BE2-9CFD-62B13A479738}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLInq.XunitTest", "SQLInq.XunitTest\SQLInq.XunitTest.csproj", "{E3EB7DD0-2849-4F12-967A-7B2C1BBD6DC0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +32,10 @@ Global
 		{96864A05-A473-4BE2-9CFD-62B13A479738}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96864A05-A473-4BE2-9CFD-62B13A479738}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96864A05-A473-4BE2-9CFD-62B13A479738}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3EB7DD0-2849-4F12-967A-7B2C1BBD6DC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3EB7DD0-2849-4F12-967A-7B2C1BBD6DC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3EB7DD0-2849-4F12-967A-7B2C1BBD6DC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3EB7DD0-2849-4F12-967A-7B2C1BBD6DC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
