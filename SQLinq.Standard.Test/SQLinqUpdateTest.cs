@@ -279,7 +279,7 @@ namespace SQLinqTest
             var sql = sqlinq.ToSQL();
             var query = sql.ToQuery();
 
-            var sqlResult = "UPDATE `MyTable` SET ID = @sqlinq_2\r\n WHERE `ID` = @sqlinq_1";
+            var sqlResult = "UPDATE `MyTable` SET `ID` = @sqlinq_2\r\n WHERE `ID` = @sqlinq_1";
             Assert.AreEqual(sqlResult,query);
             Assert.AreEqual(sql.Parameters.Count,2);
             Assert.AreEqual(sql.Parameters["@sqlinq_2"],1);
@@ -302,7 +302,7 @@ namespace SQLinqTest
             var sql = sqlinq.ToSQL();
             var query = sql.ToQuery();
 
-            var sqlResult = "UPDATE `MyTable` SET ID = @sqlinq_2\r\n WHERE `ID` = @sqlinq_1";
+            var sqlResult = "UPDATE `MyTable` SET `ID` = @sqlinq_2\r\n WHERE `ID` = @sqlinq_1";
             Assert.AreEqual(sqlResult, query);
             Assert.AreEqual(sql.Parameters.Count, 2);
             Assert.AreEqual(sql.Parameters["@sqlinq_2"], 555);

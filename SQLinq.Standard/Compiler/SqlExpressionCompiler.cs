@@ -229,7 +229,7 @@ namespace SQLinq.Compiler
                     }
                     var name = attr?.Column ?? b.Member.Name;
                     //var value = b.Member.GetValue(rr);
-                    
+                    name = dialect.ParseColumnName(name);
                     var paramaterName = getParameterName();
                     updater.Add($"{name} = {paramaterName}");
                     parameters.Add(paramaterName,value);
