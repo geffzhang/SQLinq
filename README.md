@@ -1,3 +1,6 @@
+#build status
+[![Build Status](https://travis-ci.org/uliian/SQLinq.svg?branch=master)](https://travis-ci.org/uliian/SQLinq)
+
 # SQLinq
 SQLinq allows you to use LINQ (Language INtegrated Query) features of .NET to generate Ad-Hoc SQL Queries at runtime.
 
