@@ -5,6 +5,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SQLinq;
 using System;
+using SQLinq.Standard;
 
 namespace SQLinqTest
 {
@@ -113,7 +114,7 @@ namespace SQLinqTest
                 LastName = "Pietschmann",
                 Age = 0
             };
-            var target = SQLinq.SQLinq.Insert(data, "Person");
+            var target = SQLinqHelper.Insert(data, "Person");
             var actual = (SQLinqInsertResult)target.ToSQL();
 
             Assert.AreEqual("[Person]", actual.Table);

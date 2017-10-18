@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using SQLinq.Dialect;
+using SQLinq.Standard;
 
 namespace SQLinqTest
 {
@@ -475,7 +476,7 @@ namespace SQLinqTest
                 Age = 0
             };
 
-            var query = from d in SQLinq.SQLinq.Create(obj, "PersonTable")
+            var query = from d in SQLinqHelper.Create(obj, "PersonTable")
                         where d.Age == 12 && d.MiddleName.StartsWith("R")
                         select d;
 
@@ -2201,7 +2202,7 @@ namespace SQLinqTest
         [TestMethod]
         public void Insert_001()
         {
-            var actual = SQLinq.SQLinq.Insert(new Person(), "People");
+            var actual = SQLinqHelper.Insert(new Person(), "People");
             Assert.IsInstanceOfType(actual, typeof(SQLinqInsert<Person>));
             Assert.AreEqual("People", actual.TableNameOverride);
         }
@@ -2209,7 +2210,7 @@ namespace SQLinqTest
         [TestMethod]
         public void Insert_002()
         {
-            var actual = SQLinq.SQLinq.Insert(new Person());
+            var actual = SQLinqHelper.Insert(new Person());
             Assert.IsInstanceOfType(actual, typeof(SQLinqInsert<Person>));
             Assert.AreEqual(null, actual.TableNameOverride);
         }
@@ -2226,7 +2227,7 @@ namespace SQLinqTest
         [TestMethod]
         public void Update_001()
         {
-            var actual = SQLinq.SQLinq.Update(new Person(), "People");
+            var actual = SQLinqHelper.Update(new Person(), "People");
             Assert.IsInstanceOfType(actual, typeof(SQLinqUpdate<Person>));
             Assert.AreEqual("People", actual.TableNameOverride);
         }
@@ -2234,7 +2235,7 @@ namespace SQLinqTest
         [TestMethod]
         public void Update_002()
         {
-            var actual = SQLinq.SQLinq.Update(new Person());
+            var actual = SQLinqHelper.Update(new Person());
             Assert.IsInstanceOfType(actual, typeof(SQLinqUpdate<Person>));
             Assert.AreEqual(null, actual.TableNameOverride);
         }

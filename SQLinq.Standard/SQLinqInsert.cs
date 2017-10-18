@@ -5,6 +5,7 @@
 using SQLinq.Compiler;
 using System.Collections.Generic;
 using System.Linq;
+using SQLinq.Standard;
 
 namespace SQLinq
 {
@@ -33,39 +34,26 @@ namespace SQLinq
 
         public ISQLinqResult ToSQL(int existingParameterCount = 0, string parameterNamePrefix = SqlExpressionCompiler.DefaultParameterNamePrefix)
         {
-            int _parameterNumber = existingParameterCount;
-            _parameterNumber++;
-
-            var type = this.Data.GetType();
+            int parameterNumber = existingParameterCount;
+            parameterNumber++;
+            
             var parameters = new Dictionary<string, object>();
             var fields = new Dictionary<string, string>();
 
             // Get Table / View Name
-            var tableName = this.GetTableName();
+            var tableName = TableNameOverride ?? EntityMetaData<T>.TableName;
+            tableName = Dialect.ParseTableName(tableName);
 
-            foreach (var p in type.GetProperties())
+            foreach (var p in EntityMetaData<T>.GetFiledInfos())
             {
-                var ignoreField = false;
-                var fieldName = p.Name;
-                var attr = p.GetCustomAttributes(typeof(SQLinqColumnAttribute), true).FirstOrDefault() as SQLinqColumnAttribute;
-                if (attr != null)
-                {
-                    ignoreField = attr.Ignore;
-                    if (!string.IsNullOrEmpty(attr.Column))
-                    {
-                        fieldName = attr.Column;
-                    }
-                }
 
-                if (!ignoreField)
-                {
-                    var parameterName = this.Dialect.ParameterPrefix + parameterNamePrefix + _parameterNumber.ToString();
+                var parameterName = this.Dialect.ParameterPrefix + parameterNamePrefix + parameterNumber.ToString();
 
-                    fields.Add(fieldName, parameterName);
-                    parameters.Add(parameterName, p.GetValue(this.Data, null));
+                fields.Add(p.Item1, parameterName);
+                parameters.Add(parameterName, p.Item2.GetValue(this.Data, null));
 
-                    _parameterNumber++;
-                }
+                parameterNumber++;
+
             }
 
             return new SQLinqInsertResult(this.Dialect)
@@ -76,27 +64,5 @@ namespace SQLinq
             };
         }
 
-        private string GetTableName()
-        {
-            var tableName = string.Empty;
-            if (!string.IsNullOrEmpty(this.TableNameOverride))
-            {
-                tableName = this.TableNameOverride;
-            }
-            else
-            {
-                // Get Table / View Name
-                var type = this.Data.GetType();
-                tableName = type.Name;
-                var tableAttribute = type.GetCustomAttributes(typeof(SQLinqTableAttribute), false).FirstOrDefault() as SQLinqTableAttribute;
-                if (tableAttribute != null)
-                {
-                    // Table / View name is explicitly set, use that instead
-                    tableName = tableAttribute.Table;
-                }
-            }
-
-            return this.Dialect.ParseTableName(tableName);
-        }
     }
 }

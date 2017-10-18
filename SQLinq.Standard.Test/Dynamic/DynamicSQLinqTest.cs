@@ -5,6 +5,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SQLinq.Dynamic;
 using System;
+using SQLinq.Standard;
 
 namespace SQLinqTest.Dynamic
 {
@@ -15,7 +16,7 @@ namespace SQLinqTest.Dynamic
         public void DynamicSQLinq_Create_001()
         {
             var expected = "tblPerson";
-            var target = SQLinq.SQLinq.Create(expected);
+            var target = SQLinqHelper.Create(expected);
             Assert.AreEqual(expected, target.TableName);
         }
 
@@ -24,7 +25,7 @@ namespace SQLinqTest.Dynamic
         {
             var dialect = new SQLinq.OracleDialect();
             var expected = "tblPerson";
-            var target = SQLinq.SQLinq.Create(expected, dialect);
+            var target = SQLinqHelper.Create(expected, dialect);
             Assert.AreEqual(expected, target.TableName);
         }
 

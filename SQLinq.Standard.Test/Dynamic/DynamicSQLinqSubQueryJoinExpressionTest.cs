@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SQLinq.Dynamic;
 using System;
+using SQLinq.Standard;
 
 namespace SQLinqTest.Dynamic
 {
@@ -10,7 +11,7 @@ namespace SQLinqTest.Dynamic
         [TestMethod]
         public void DynamicSQLinqSubQueryJoinExpression_Constructor_001()
         {
-            var query = SQLinq.SQLinq.Create("test");
+            var query = SQLinqHelper.Create("test");
             var alias = "name";
             var clause = "1 = 1";
             var param1 = "test";
@@ -30,7 +31,7 @@ namespace SQLinqTest.Dynamic
         [TestMethod, ExpectedException(typeof(ArgumentException))]
         public void DynamicSQLinqSubQueryJoinExpression_ToSQL_001()
         {
-            var query = SQLinq.SQLinq.Create("test");
+            var query = SQLinqHelper.Create("test");
             var alias = "name";
             var clause = "1 = 1";
             var param1 = "test";
@@ -44,7 +45,7 @@ namespace SQLinqTest.Dynamic
         [TestMethod, ExpectedException(typeof(ArgumentException))]
         public void DynamicSQLinqSubQueryJoinExpression_ToSQL_002()
         {
-            var query = SQLinq.SQLinq.Create("test");
+            var query = SQLinqHelper.Create("test");
             var alias = "name";
             var clause = "1 = 1";
             var param1 = "test";
@@ -58,7 +59,7 @@ namespace SQLinqTest.Dynamic
         [TestMethod, ExpectedException(typeof(ArgumentException))]
         public void DynamicSQLinqSubQueryJoinExpression_ToSQL_003()
         {
-            var query = SQLinq.SQLinq.Create("test");
+            var query = SQLinqHelper.Create("test");
             var alias = "name";
             var clause = "1 = 1";
             var param1 = "test";

@@ -8,8 +8,6 @@ This allows for easy generation of ad-hoc SQL code using strongly typed LINQ cod
 
 ## Nuget Package
 
-[![Install SQLinq via Nuget](http://sqlinq.codeplex.com/Download?ProjectName=sqlinq&DownloadId=357830 "Install SQLinq via Nuget")](http://nuget.org/packages/sqlinq)  
-[http://nuget.org/packages/sqlinq](http://nuget.org/packages/sqlinq)
 
 ## SQLinq Usage
 
@@ -66,37 +64,3 @@ foreach(var p in sqlParameters)
 }
 // now execute the command and get the results from the database
 ```
-
-## SQLinq.Dapper
-
-SQLinq.Dapper is a small helper library that bridges the gap between SQLinq and [Dapper dot net](http://code.google.com/p/dapper-dot-net/) to allow for queries to be performed more easily.  
-
-**SQLinq.Dapper Usage:**  
-Here's a simple example of using SQLinq.Dapper:  
-
-```c#
-IEnumerable<Person> data = null;
-using(IDbConnection con = GetDbConnection())
-{
-    con.Open();
-    data = con.Query(
-        from p in new SQLinq<Person>()
-        where p.FirstName.StartsWith("C") && p.Age > 21
-        orderby p.FirstName
-        select p
-    );
-    con.Close();
-}
-
-// do somthing with the data that was returned
-```
-
-**Install SQLinq.Dapper via Nuget**  
-SQLinq.Dapper can also be installed into your project via Nuget!  
-[http://nuget.org/packages/SQLinq.Dapper](http://nuget.org/packages/SQLinq.Dapper)  
-
-[![Install SQLinq via Nuget](http://download.codeplex.com/Download?ProjectName=sqlinq&DownloadId=358422 "Install SQLinq via Nuget")](http://nuget.org/packages/SQLinq.Dapper)  
-
-## Articles
-
-[SQLinq: Use LINQ to generate Ad-Hoc, strongly typed SQL queries](http://pietschsoft.com/post/2012/03/24/SQLinq-Use-LINQ-to-generate-Ad-Hoc-strongly-typed-SQL-queries)

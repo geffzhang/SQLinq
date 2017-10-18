@@ -2,6 +2,8 @@
 //Licensed under the GNU Library General Public License (LGPL)
 //License can be found here: http://sqlinq.codeplex.com/license
 
+using SQLinq.Standard;
+
 namespace SQLinq
 {
     public static class ObjectExtensions
@@ -19,7 +21,7 @@ namespace SQLinq
             {
                 dialect = DialectProvider.Create();
             }
-            return SQLinq.Create(obj, tableName, dialect);
+            return SQLinqHelper.Create(obj, tableName, dialect);
         }
 
         public static SQLinqInsert<T> ToSQLinqInsert<T>(this T obj, string tableName = null, ISqlDialect dialect = null)
@@ -28,7 +30,7 @@ namespace SQLinq
             {
                 dialect = DialectProvider.Create();
             }
-            return SQLinq.Insert(obj, tableName, dialect);
+            return SQLinqHelper.Insert(obj, tableName, dialect);
         }
 
         public static SQLinqUpdate<T> ToSQLinqUpdate<T>(this T obj, string tableName = null, ISqlDialect dialect = null)
@@ -37,7 +39,7 @@ namespace SQLinq
             {
                 dialect = DialectProvider.Create();
             }
-            return SQLinq.Update(obj, tableName, dialect);
+            return SQLinqHelper.Update(obj, tableName, dialect);
         }
     }
 }

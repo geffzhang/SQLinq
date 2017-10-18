@@ -7,6 +7,7 @@ using SQLinq;
 using System;
 using System.Linq;
 using SQLinq.Dialect;
+using SQLinq.Standard;
 
 namespace SQLinqTest
 {
@@ -108,7 +109,7 @@ namespace SQLinqTest
                 FirstName = "Chris",
                 LastName = "Pietschmann"
             };
-            var target = SQLinq.SQLinq.Update(data);
+            var target = SQLinqHelper.Update(data);
             var actual = (SQLinqUpdateResult)target.ToSQL(42, "foo");
 
             Assert.AreEqual("[PersonInsert]", actual.Table);
