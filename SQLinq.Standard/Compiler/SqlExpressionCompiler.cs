@@ -263,8 +263,11 @@ namespace SQLinq.Compiler
                     return ProcessNotEqualExpression(dialect, rootExpression, (BinaryExpression)e, parameters, getParameterName);
 
                 case ExpressionType.And:
-                case ExpressionType.AndAlso:
                     var aae = (BinaryExpression)e;
+                    return string.Format("({0} & {1})", ProcessExpression(dialect, rootExpression, aae.Left, parameters, getParameterName), ProcessExpression(dialect, rootExpression, aae.Right, parameters, getParameterName));
+
+                case ExpressionType.AndAlso:
+                     aae = (BinaryExpression)e;
                     return string.Format("({0} AND {1})", ProcessExpression(dialect, rootExpression, aae.Left, parameters, getParameterName), ProcessExpression(dialect, rootExpression, aae.Right, parameters, getParameterName));
                     
                 case ExpressionType.Or:
@@ -348,6 +351,18 @@ namespace SQLinq.Compiler
                         throw new Exception("Unsupported Method Name (" + method.Name + ") on Guid object");
                 }
             }
+            else if (method.DeclaringType == typeof(Enum))
+            {
+                string parameterName = GetExpressionValue(dialect, rootExpression, e.Arguments[0], parameters, getParameterName);
+                
+                switch (method.Name.ToUpperInvariant())
+                {
+                    case "HASFLAG":
+                        return string.Format("({0} & {1}) = {1}", memberName, parameterName);
+                    default:
+                        throw new Exception("Unsupported Method Name (" + method.Name + ") on String object");
+                }
+            }
             else if (method.DeclaringType == typeof(string))
             {
                 string parameterName = null;
@@ -402,15 +417,14 @@ namespace SQLinq.Compiler
                         return string.Format("CHARINDEX({0}, {1})", parameterName, memberName);
                     case "TRIM":
                         return string.Format("LTRIM(RTRIM({0}))", memberName);
-
                     default:
                         throw new Exception("Unsupported Method Name (" + method.Name + ") on String object");
                 }
             }
-            else if(method.DeclaringType == typeof(Enumerable))
+            else if (method.DeclaringType == typeof(Enumerable))
             {
                 string parameterName = GetExpressionValue(dialect, rootExpression, e.Arguments[0], parameters, getParameterName);
-                memberName = GetMemberColumnName(((MemberExpression)e.Arguments[1]).Member , dialect);
+                memberName = GetMemberColumnName(((MemberExpression)e.Arguments[1]).Member, dialect);
 
 
                 switch (method.Name.ToUpperInvariant())
@@ -420,7 +434,7 @@ namespace SQLinq.Compiler
                     default:
                         throw new Exception("Unsupported Method Declaring Type (" + method.DeclaringType.Name + ")");
                 }
-                
+
             }
             else
                 throw new Exception("Unsupported Method Declaring Type (" + method.DeclaringType.Name + ")");
@@ -725,7 +739,17 @@ namespace SQLinq.Compiler
                 }
                 
             }
-                
+            else
+            {
+                if(e.NodeType == ExpressionType.Convert)
+                {
+                    var u = (UnaryExpression)e;
+                    //var result = ProcessExpression(dialect, rootExpression, u, parameters, getParameterName);
+                    var result = ProcessExpression(dialect, rootExpression, u, parameters, getParameterName);
+                    return result;
+                }
+            }
+
             var ce = (e is ConstantExpression) ? e : de.Expression;
             if (ce.NodeType == ExpressionType.Constant)
             {
