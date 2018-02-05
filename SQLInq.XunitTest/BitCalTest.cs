@@ -32,7 +32,7 @@ namespace SQLInq.XunitTest
             var sqlResult = sql.ToSQL();
             var query = sqlResult.ToQuery();
             Assert.Equal("SELECT * FROM `FlagTestEntity` WHERE (`MyType` & @sqlinq_1) = @sqlinq_1", query);
-            Assert.Equal(sqlResult.Parameters["@sqlinq_1"], FType.A);
+            Assert.Equal(sqlResult.Parameters["@sqlinq_1"], (short)FType.A);
         }
     }
 }

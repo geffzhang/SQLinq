@@ -14,8 +14,8 @@ namespace SQLInq.XunitTest.Entity
     public enum FType : short
     {
         A = 1,
-        B = 2,
-        C = 4,
-        D = 8
+        B,
+        C,
+        D 
     }
 }
