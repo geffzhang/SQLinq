@@ -17,10 +17,10 @@ namespace SQLinq.Dialect
                 return (bool)value ? 1 : 0;
             }
 
-            if (value.GetType().IsEnum)
-            {
-                return (short)value;
-            }
+            //if (value.GetType().IsEnum)
+            //{
+            //    return (short)value;
+            //}
 
             return value;
         }
